@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register — MarketMeter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+</head>
+<body class="auth-body">
+
+  <!-- Navigation -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">MarketMeter</a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../index.html#about">About</a></li>
+          <li><a href="../index.html#how-it-works">How It Works</a></li>
+          <li><a href="login.html" class="nav-login">Login</a></li>
+          <li><a href="register.html" class="nav-register">Register</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Register Page -->
+  <main class="auth-main">
+    <div class="auth-split">
+
+      <!-- Left Panel -->
+      <div class="auth-panel-left">
+        <div class="auth-panel-content">
+          <p class="auth-panel-label">Join the Community</p>
+          <h2 class="auth-panel-headline">Help build a transparent marketplace for every Filipino consumer.</h2>
+          <p class="auth-panel-desc">Create a free account to start submitting prices, verifying community data, and comparing goods against official SRP — all in one place.</p>
+          <div class="auth-panel-divider"></div>
+          <ul class="auth-panel-features">
+            <li>Submit prices from your local market</li>
+            <li>Verify and confirm entries from your area</li>
+            <li>Contribute to transparent consumer data</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Right Panel / Form -->
+      <div class="auth-panel-right">
+        <div class="auth-form-wrapper">
+          <div class="auth-form-header">
+            <h1>Create Account</h1>
+            <p>Fill in the details below to get started for free.</p>
+          </div>
+
+          <form id="registerForm" class="auth-form" novalidate>
+
+            <!-- General error/success message (JS-populated) -->
+            <div class="form-alert form-alert--error" id="registerGeneralError" role="alert" aria-live="polite"></div>
+            <div class="form-alert form-alert--success" id="registerSuccess" role="status" aria-live="polite"></div>
+
+            <!-- Full Name -->
+            <div class="form-group" id="group-reg-name">
+              <label for="regName" class="form-label">Full Name</label>
+              <input
+                type="text"
+                id="regName"
+                name="fullName"
+                class="form-input"
+                placeholder="Juan dela Cruz"
+                autocomplete="name"
+                required
+                data-validate="name"
+                minlength="2"
+              />
+              <span class="form-error" id="error-reg-name" role="alert"></span>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group" id="group-reg-email">
+              <label for="regEmail" class="form-label">Email Address</label>
+              <input
+                type="email"
+                id="regEmail"
+                name="email"
+                class="form-input"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+                data-validate="email"
+              />
+              <span class="form-error" id="error-reg-email" role="alert"></span>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group" id="group-reg-password">
+              <label for="regPassword" class="form-label">Password</label>
+              <div class="input-wrapper">
+                <input
+                  type="password"
+                  id="regPassword"
+                  name="password"
+                  class="form-input"
+                  placeholder="Minimum 8 characters"
+                  autocomplete="new-password"
+                  required
+                  data-validate="password"
+                  minlength="8"
+                />
+                <button type="button" class="toggle-password" data-target="regPassword" aria-label="Toggle password visibility">
+                  Show
+                </button>
+              </div>
+              <span class="form-error" id="error-reg-password" role="alert"></span>
+              <!-- Password strength bar -->
+              <div class="password-strength" id="passwordStrength" aria-live="polite">
+                <div class="strength-bar">
+                  <div class="strength-fill" id="strengthFill"></div>
+                </div>
+                <span class="strength-label" id="strengthLabel"></span>
+              </div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group" id="group-reg-confirm">
+              <label for="regConfirmPassword" class="form-label">Confirm Password</label>
+              <div class="input-wrapper">
+                <input
+                  type="password"
+                  id="regConfirmPassword"
+                  name="confirmPassword"
+                  class="form-input"
+                  placeholder="Re-enter your password"
+                  autocomplete="new-password"
+                  required
+                  data-validate="confirm"
+                  data-match="regPassword"
+                />
+                <button type="button" class="toggle-password" data-target="regConfirmPassword" aria-label="Toggle confirm password visibility">
+                  Show
+                </button>
+              </div>
+              <span class="form-error" id="error-reg-confirm" role="alert"></span>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="btn btn-primary btn-full" id="registerBtn">
+              Create an Account
+            </button>
+
+            <p class="auth-redirect">
+              Already have an account? <a href="login.html" class="form-link">Sign in here</a>
+            </p>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer auth-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="logo">MarketMeter</span>
+        <p class="footer-copy">&copy; 2025 MarketMeter. All rights reserved. A university research project.</p>
+      </div>
+      <nav class="footer-nav">
+        <a href="index.html">Home</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#how-it-works">How It Works</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!--
+    ============================================================
+    JS INTEGRATION NOTES FOR BACKEND DEVELOPER
+    ============================================================
+    The form has id="registerForm".
+    Fields:
+      - #regName            → input[name="fullName"]
+      - #regEmail           → input[name="email"]
+      - #regPassword        → input[name="password"]
+      - #regConfirmPassword → input[name="confirmPassword"]
+
+    To hook in your JS:
+      document.getElementById('registerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const fullName        = document.getElementById('regName').value.trim();
+        const email           = document.getElementById('regEmail').value.trim();
+        const password        = document.getElementById('regPassword').value;
+        const confirmPassword = document.getElementById('regConfirmPassword').value;
+        // Run your local DB insert here
+      });
+
+    To show a general error (e.g. email already taken):
+      const el = document.getElementById('registerGeneralError');
+      el.textContent = 'This email is already registered.';
+      el.style.display = 'block';
+
+    To show a success message:
+      const el = document.getElementById('registerSuccess');
+      el.textContent = 'Account created successfully! Redirecting...';
+      el.style.display = 'block';
+
+    Field-level errors follow the same pattern as login.html.
+    ============================================================
+  -->
+
+  <script src="js/auth.js"></script>
+</body>
+</html>
