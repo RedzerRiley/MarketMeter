@@ -10,46 +10,36 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
   <style>
-    :root { --primary-green: #0a4635; --warm-bg: #f9f7f2; --dark-text: #333333; }
-    body { font-family: 'Poppins', sans-serif; background-color: var(--warm-bg); margin: 0; color: var(--dark-text); line-height: 1.6; }
-    
-    h1, h2, h3 { font-family: 'DM Serif Display', serif; color: var(--primary-green); letter-spacing: 0.5px; }
+    :root { --green: #1F4E3D; --green-dark: #173D30; --bg: #F5F5F2; --text: #1A1A1A; }
+    body { font-family: 'Poppins', sans-serif; background-color: var(--bg); margin: 0; color: var(--text); line-height: 1.6; }
     
     header.navbar { background-color: #ffffff; padding: 15px 20px; border-bottom: 1px solid #eaeaea; position: sticky; top: 0; z-index: 100; }
     .nav-inner { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; width: 100%; }
-    
-    .logo { 
-      font-family: 'DM Serif Display', serif; 
-      font-size: 28px; 
-      color: var(--primary-green) !important; 
-      letter-spacing: 0.5px; 
-      text-decoration: none; 
-      margin: 0; 
-      font-weight: normal;
-    }
+    .logo { font-family: 'DM Serif Display', serif; font-size: 1.35rem; color: var(--green); letter-spacing: -0.01em; text-decoration: none; margin: 0; }
     
     .nav-links { list-style: none; display: flex; gap: 25px; margin: 0; padding: 0; align-items: center; }
-    .nav-links li a { color: var(--dark-text); text-decoration: none; font-weight: 500; font-size: 15px; transition: color 0.3s; }
-    .nav-links li a:hover { color: var(--primary-green); }
-    .nav-register { background-color: var(--primary-green); color: white !important; padding: 10px 24px; border-radius: 30px; font-weight: 600; transition: background-color 0.3s; }
-    .nav-register:hover { background-color: #145a46; }
+    .nav-links li a { color: var(--text); text-decoration: none; font-weight: 500; font-size: 15px; transition: color 0.3s; }
+    .nav-links li a:hover { color: var(--green); }
+    .nav-register { background-color: var(--green); color: white !important; padding: 10px 24px; border-radius: 30px; font-weight: 600; }
 
-    .main-content { padding: 60px 20px; }
-    .container { max-width: 1000px; margin: 0 auto; }
-    .section-header { text-align: center; margin-bottom: 40px; }
-    .section-header h2 { margin-bottom: 10px; font-size: 32px; margin-top: 0; }
-    .section-header p { color: #555; margin: 0; }
-    
-    .card-container { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+    .main-content { padding: 40px 20px; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 30px; }
+    .section-header h2 { font-family: 'DM Serif Display', serif; color: var(--green); font-size: 32px; margin: 0; }
+
+    .controls-container { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+    .search-input, .filter-select { padding: 12px 16px; border: 1px solid #ddd; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 14px; }
+    .search-input { flex: 1; min-width: 250px; }
+
+    .card-container { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 24px rgba(31, 78, 61, 0.08); }
     .table-wrapper { overflow-x: auto; }
-    table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 700px; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 800px; }
     th, td { padding: 18px 15px; text-align: left; border-bottom: 1px solid #eee; }
-    th { background-color: var(--primary-green); color: white; font-weight: 500; font-family: 'Poppins', sans-serif; letter-spacing: 1px; font-size: 14px; text-transform: uppercase; }
+    th { background-color: var(--green); color: white; font-weight: 500; font-size: 13px; text-transform: uppercase; }
     th:first-child { border-top-left-radius: 12px; }
     th:last-child { border-top-right-radius: 12px; }
-    tr:hover { background-color: #f9f9f9; }
 
-    .status { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; color: white; display: inline-block; letter-spacing: 0.5px; }
+    .status { padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; color: white; display: inline-block; }
     .above-srp { background-color: #e74c3c; }
     .at-srp { background-color: #f1c40f; color: #333; }
     .below-srp { background-color: #2ecc71; }
@@ -63,7 +53,7 @@
       <nav>
         <ul class="nav-links">
           <li><a href="../index.html">Home</a></li>
-          <li><a href="dashboard.html" style="color: var(--primary-green); font-weight: 600;">Catalog</a></li>
+          <li><a href="dashboard.html" style="color: var(--green); font-weight: 600;">Catalog</a></li>
           <li><a href="submit-price.html">Submit Price</a></li>
           <li><a href="login.html">Login</a></li>
           <li><a href="register.html" class="nav-register">Register</a></li>
@@ -76,10 +66,19 @@
     <div class="container">
       <div class="section-header">
         <h2>Market Price Catalog</h2>
-        <p>Live comparisons of basic goods in your area.</p>
       </div>
       
       <div class="card-container">
+        <div class="controls-container">
+          <input type="text" id="searchInput" class="search-input" placeholder="Search product or location...">
+          <select id="filterStatus" class="filter-select">
+            <option value="all">All Comparisons</option>
+            <option value="above">Above SRP</option>
+            <option value="below">Below SRP</option>
+            <option value="equal">Equal to SRP</option>
+          </select>
+        </div>
+
         <div class="table-wrapper">
           <table>
             <thead>
@@ -88,36 +87,11 @@
                 <th>Market Location</th>
                 <th>Posted Price</th>
                 <th>SRP</th>
-                <th>Date Submitted</th>
-                <th>Comparison</th>
+                <th>Date Reported</th>
+                <th>Status</th>
               </tr>
             </thead>
-            <tbody id="priceTableBody">
-              <tr>
-                <td>Refined Sugar (1kg)</td>
-                <td>Bayan Public Market</td>
-                <td>₱85.00</td>
-                <td>₱85.00</td>
-                <td>Feb 20, 2026</td>
-                <td><span class="status at-srp">Equal to SRP</span></td>
-              </tr>
-              <tr>
-                <td>Well-Milled Rice (1kg)</td>
-                <td>Pamilihang Bayan ng Rodriguez</td>
-                <td>₱55.00</td>
-                <td>₱50.00</td>
-                <td>Feb 19, 2026</td>
-                <td><span class="status above-srp">+₱5.00 (Above)</span></td>
-              </tr>
-              <tr>
-                <td>Red Onion (1kg)</td>
-                <td>San Mateo Market</td>
-                <td>₱110.00</td>
-                <td>₱120.00</td>
-                <td>Feb 19, 2026</td>
-                <td><span class="status below-srp">-₱10.00 (Below)</span></td>
-              </tr>
-            </tbody>
+            <tbody id="priceTableBody"></tbody>
           </table>
         </div>
       </div>
@@ -135,45 +109,49 @@
         "Whole Chicken (1kg)": 200.00
     };
 
-    const formatCurrency = (amount) => `₱${parseFloat(amount).toFixed(2)}`;
-
-    const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    };
-
     function loadDynamicData() {
         const tableBody = document.getElementById('priceTableBody');
+        const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+        const filterStatus = document.getElementById('filterStatus').value;
+        tableBody.innerHTML = ''; 
+
         let savedPrices = JSON.parse(localStorage.getItem('marketMeterData')) || [];
+        
+        if (savedPrices.length === 0) {
+            savedPrices = [
+                { product: "Refined Sugar (1kg)", location: "Bayan Public Market", price: 85.00, date: "2026-02-20" },
+                { product: "Well-Milled Rice (1kg)", location: "Pamilihang Bayan ng Rodriguez", price: 55.00, date: "2026-02-19" },
+                { product: "Red Onion (1kg)", location: "San Mateo Market", price: 110.00, date: "2026-02-19" }
+            ];
+            localStorage.setItem('marketMeterData', JSON.stringify(savedPrices));
+        }
 
-        savedPrices.forEach(item => {
+        [...savedPrices].reverse().forEach(item => {
             const srp = srpDatabase[item.product] || 0;
-            const difference = item.price - srp;
-
-            let badgeHtml = '';
-            if (difference > 0) {
-                badgeHtml = `<span class="status above-srp">+${formatCurrency(difference)} (Above)</span>`;
-            } else if (difference < 0) {
-                badgeHtml = `<span class="status below-srp">${formatCurrency(difference)} (Below)</span>`;
-            } else {
-                badgeHtml = `<span class="status at-srp">Equal to SRP</span>`;
+            const diff = item.price - srp;
+            let statusCategory = 'equal';
+            let badge = `<span class="status at-srp">Equal to SRP</span>`;
+            
+            if (diff > 0) {
+                statusCategory = 'above';
+                badge = `<span class="status above-srp">+₱${diff.toFixed(2)} Above</span>`;
+            } else if (diff < 0) {
+                statusCategory = 'below';
+                badge = `<span class="status below-srp">₱${Math.abs(diff).toFixed(2)} Below</span>`;
             }
 
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td>${item.product}</td>
-                <td>${item.location}</td>
-                <td>${formatCurrency(item.price)}</td>
-                <td>${formatCurrency(srp)}</td>
-                <td>${formatDate(item.date)}</td>
-                <td>${badgeHtml}</td>
-            `;
-
-            tableBody.insertBefore(newRow, tableBody.firstChild);
+            if ((item.product.toLowerCase().includes(searchQuery) || item.location.toLowerCase().includes(searchQuery)) && 
+                (filterStatus === 'all' || filterStatus === statusCategory)) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${item.product}</td><td>${item.location}</td><td>₱${parseFloat(item.price).toFixed(2)}</td><td>₱${srp.toFixed(2)}</td><td>${item.date}</td><td>${badge}</td>`;
+                tableBody.appendChild(row);
+            }
         });
     }
 
+    document.getElementById('searchInput').addEventListener('input', loadDynamicData);
+    document.getElementById('filterStatus').addEventListener('change', loadDynamicData);
     window.onload = loadDynamicData;
   </script>
-
 </body>
 </html>
