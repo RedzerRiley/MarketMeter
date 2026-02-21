@@ -8,47 +8,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
-
-  <style>
-    :root { --primary-green: #0a4635; --warm-bg: #f9f7f2; --dark-text: #333333; }
-    body { font-family: 'Poppins', sans-serif; background-color: var(--warm-bg); margin: 0; color: var(--dark-text); line-height: 1.6; }
-    h1, h2, h3, .logo { font-family: 'DM Serif Display', serif; color: var(--primary-green); letter-spacing: 0.5px; }
-    
-    header.navbar { background-color: #ffffff; padding: 15px 20px; border-bottom: 1px solid #eaeaea; position: sticky; top: 0; z-index: 100; }
-    .nav-inner { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; width: 100%; }
-    .logo { font-size: 28px; text-decoration: none; margin: 0; }
-    .nav-links { list-style: none; display: flex; gap: 25px; margin: 0; padding: 0; align-items: center; }
-    .nav-links li a { color: var(--dark-text); text-decoration: none; font-weight: 500; font-size: 15px; transition: color 0.3s; }
-    .nav-links li a:hover { color: var(--primary-green); }
-    .nav-register { background-color: var(--primary-green); color: white !important; padding: 10px 24px; border-radius: 30px; font-weight: 600; transition: background-color 0.3s; }
-    .nav-register:hover { background-color: #145a46; }
-
-    .main-content { padding: 60px 20px; }
-    .container { max-width: 1000px; margin: 0 auto; }
-    .section-header { text-align: center; margin-bottom: 40px; }
-    .section-header h2 { margin-bottom: 10px; font-size: 32px; margin-top: 0; }
-    .section-header p { color: #555; margin: 0; }
-    
-    .card-container { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-
-    .form-group { margin-bottom: 25px; text-align: left; }
-    .form-group label { display: block; margin-bottom: 10px; font-weight: 600; color: var(--dark-text); font-size: 14px; }
-    .form-group input, .form-group select { width: 100%; padding: 14px; border: 1px solid #e0e0e0; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 15px; box-sizing: border-box; transition: border-color 0.3s; }
-    .form-group input:focus, .form-group select:focus { border-color: var(--primary-green); outline: none; }
-    input[readonly] { background-color: #f4f4f4; color: #888; cursor: not-allowed; }
-    
-    .btn-primary { display: block; width: 100%; background-color: var(--primary-green); color: white; border: 2px solid var(--primary-green); border-radius: 30px; cursor: pointer; padding: 16px; font-size: 16px; font-weight: 600; font-family: 'Poppins', sans-serif; transition: all 0.3s; text-align: center; }
-    .btn-primary:hover { background-color: #145a46; border-color: #145a46; }
-  </style>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
   <header class="navbar">
     <div class="nav-inner">
-      <a href="../index.html" class="logo">MarketMeter</a>
+      <a href="#" class="logo">MarketMeter</a>
       <nav>
         <ul class="nav-links">
-          <li><a href="../index.html">Home</a></li>
           <li><a href="dashboard.html">Catalog</a></li>
           <li><a href="submit-price.html" style="color: var(--primary-green); font-weight: 600;">Submit Price</a></li>
           <li><a href="login.html">Login</a></li>
@@ -105,23 +73,27 @@
 
   <script>
     const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
-
+    const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     document.getElementById('submitDate').value = formattedDate;
 
     document.getElementById('submitPriceForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const product = document.getElementById('productName').value;
-        const location = document.getElementById('marketLocation').value;
-        const price = document.getElementById('price').value;
+        event.preventDefault(); 
 
-        alert(`Success! You submitted ₱${price} for ${product} at ${location}. It is now pending community verification.`);
+        const newSubmission = {
+            product: document.getElementById('productName').value,
+            location: document.getElementById('marketLocation').value,
+            price: parseFloat(document.getElementById('price').value),
+            date: document.getElementById('submitDate').value
+        };
+
+        let savedPrices = JSON.parse(localStorage.getItem('marketMeterData')) || [];
         
-        this.reset();
-        document.getElementById('submitDate').value = formattedDate; 
+        savedPrices.push(newSubmission);
+        
+        localStorage.setItem('marketMeterData', JSON.stringify(savedPrices));
+
+        alert(`Success! You submitted ₱${newSubmission.price} for ${newSubmission.product}. Redirecting to Catalog...`);
+        window.location.href = 'dashboard.html'; 
     });
   </script>
 
