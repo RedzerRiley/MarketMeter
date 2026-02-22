@@ -167,6 +167,19 @@ function initLoginForm() {
     var email    = emailInput.value.trim();
     var password = passwordInput.value;
 
+    let storedUsers = JSON.parse(localStorage.getItem('marketMeterUsers')) || [];
+
+let user = storedUsers.find(u => u.email === email);
+if (!user || user.password !== password) {
+  showAlert('loginGeneralError', 'Invalid email or password.');
+  return;
+}
+
+// Success
+showAlert('loginGeneralError', '');
+alert(`Welcome back, ${user.fullName}!`);
+window.location.href = 'dashboard.html'; // Or any page you want after login
+
     /* --------------------------------------------------------
        BACKEND HOOK — Login authentication
        --------------------------------------------------------
@@ -277,6 +290,21 @@ function initRegisterForm() {
     var email    = emailInput.value.trim();
     var password = passwordInput.value;
 
+
+    let storedUsers = JSON.parse(localStorage.getItem('marketMeterUsers')) || [];
+
+// Check if email exists
+if (storedUsers.find(u => u.email === email)) {
+  showAlert('registerGeneralError', 'This email is already registered.');
+  return;
+}
+
+// Save new user (password stored in plain text here — fine for learning/demo only)
+storedUsers.push({ fullName, email, password });
+localStorage.setItem('marketMeterUsers', JSON.stringify(storedUsers));
+
+showAlert('registerSuccess', 'Account created! Redirecting to login...');
+setTimeout(function() { window.location.href = 'login.html'; }, 2000);
     /* --------------------------------------------------------
        BACKEND HOOK — User registration
        --------------------------------------------------------
