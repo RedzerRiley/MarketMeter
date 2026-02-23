@@ -1,0 +1,377 @@
+/* ============================================================
+   MarketMeter — auth.css
+   Styles for login.html and register.html
+   Depends on: style.css (variables, navbar, footer, buttons)
+   ============================================================ */
+
+/* ---------- Auth Body ---------- */
+
+.auth-body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg);
+}
+
+/* ---------- Auth Main ---------- */
+
+.auth-main {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+}
+
+/* ---------- Split Layout ---------- */
+
+.auth-split {
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - 57px - 73px); /* viewport minus navbar + footer */
+}
+
+/* ---------- Left Panel ---------- */
+
+.auth-panel-left {
+  flex: 0 0 42%;
+  background-color: var(--green);
+  display: flex;
+  align-items: center;
+  padding: 64px 48px;
+}
+
+.auth-panel-content {
+  max-width: 380px;
+}
+
+.auth-panel-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.auth-panel-headline {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  color: var(--white);
+  line-height: 1.25;
+  margin-bottom: 20px;
+}
+
+.auth-panel-desc {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.8;
+  margin-bottom: 32px;
+}
+
+.auth-panel-divider {
+  width: 48px;
+  height: 2px;
+  background-color: var(--gold);
+  margin-bottom: 28px;
+  border-radius: 2px;
+}
+
+.auth-panel-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-panel-features li {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.75);
+  padding-left: 16px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.auth-panel-features li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--gold);
+}
+
+/* ---------- Right Panel ---------- */
+
+.auth-panel-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 40px;
+  background-color: var(--white);
+}
+
+.auth-form-wrapper {
+  width: 100%;
+  max-width: 420px;
+}
+
+/* ---------- Form Header ---------- */
+
+.auth-form-header {
+  margin-bottom: 32px;
+}
+
+.auth-form-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem;
+  color: var(--green);
+  margin-bottom: 6px;
+}
+
+.auth-form-header p {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ---------- Form Elements ---------- */
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+
+.label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-input {
+  width: 100%;
+  padding: 11px 14px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text);
+  background-color: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  outline: none;
+  appearance: none;
+}
+
+.form-input::placeholder {
+  color: #AEAAA5;
+}
+
+.form-input:focus {
+  border-color: var(--green);
+  background-color: var(--white);
+  box-shadow: 0 0 0 3px rgba(31, 78, 61, 0.08);
+}
+
+/* Input state: valid */
+.form-group.is-valid .form-input {
+  border-color: #2E7D52;
+  background-color: #F2FAF5;
+}
+
+/* Input state: invalid */
+.form-group.is-invalid .form-input {
+  border-color: #C0392B;
+  background-color: #FDF4F3;
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.07);
+}
+
+/* Password input has extra right padding for toggle button */
+.input-wrapper .form-input {
+  padding-right: 64px;
+}
+
+/* ---------- Toggle Password Button ---------- */
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--green);
+  padding: 4px 6px;
+  letter-spacing: 0.03em;
+}
+
+.toggle-password:hover {
+  color: var(--green-dark);
+}
+
+/* ---------- Error & Hint Text ---------- */
+
+.form-error {
+  font-size: 0.775rem;
+  color: #C0392B;
+  font-weight: 500;
+  min-height: 16px;
+  display: block;
+}
+
+.form-link {
+  color: var(--green);
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.form-link:hover {
+  text-decoration: underline;
+}
+
+.form-link--small {
+  font-size: 0.775rem;
+}
+
+/* ---------- General Alert Banners ---------- */
+
+.form-alert {
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: none; /* shown by JS */
+  line-height: 1.5;
+}
+
+.form-alert--error {
+  background-color: #FDF4F3;
+  color: #C0392B;
+  border: 1px solid #F1C0BB;
+}
+
+.form-alert--success {
+  background-color: #F2FAF5;
+  color: #1E6F43;
+  border: 1px solid #A8D9BA;
+}
+
+/* ---------- Password Strength Indicator ---------- */
+
+.password-strength {
+  display: none; /* shown by JS when user types */
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.strength-bar {
+  width: 100%;
+  height: 4px;
+  background-color: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.strength-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 4px;
+  transition: width 0.25s ease, background-color 0.25s ease;
+}
+
+.strength-fill.strength-weak   { width: 33%; background-color: #C0392B; }
+.strength-fill.strength-medium { width: 66%; background-color: #E67E22; }
+.strength-fill.strength-strong { width: 100%; background-color: #2E7D52; }
+
+.strength-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------- Full-Width Button ---------- */
+
+.btn-full {
+  width: 100%;
+  text-align: center;
+  padding: 13px 28px;
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+
+/* ---------- Redirect Link ---------- */
+
+.auth-redirect {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* ---------- Auth Footer ---------- */
+
+.auth-footer {
+  margin-top: auto;
+}
+
+/* ---------- Mobile Responsive ---------- */
+
+@media (max-width: 860px) {
+  .auth-split {
+    flex-direction: column;
+    min-height: unset;
+  }
+
+  .auth-panel-left {
+    flex: unset;
+    padding: 40px 24px;
+  }
+
+  .auth-panel-content {
+    max-width: 100%;
+  }
+
+  .auth-panel-headline {
+    font-size: 1.4rem;
+  }
+
+  .auth-panel-right {
+    padding: 40px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-panel-left {
+    padding: 32px 20px;
+  }
+
+  .auth-panel-right {
+    padding: 32px 20px;
+  }
+
+  .auth-form-header h1 {
+    font-size: 1.6rem;
+  }
+}
