@@ -3,75 +3,169 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MarketMeter - Catalog</title>
-  
+  <title>Catalog — MarketMeter</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
-
-  <style>
-    :root { --green: #1F4E3D; --green-dark: #173D30; --bg: #F5F5F2; --text: #1A1A1A; }
-    body { font-family: 'Poppins', sans-serif; background-color: var(--bg); margin: 0; color: var(--text); line-height: 1.6; }
-    
-    header.navbar { background-color: #ffffff; padding: 15px 20px; border-bottom: 1px solid #eaeaea; position: sticky; top: 0; z-index: 100; }
-    .nav-inner { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; width: 100%; }
-    .logo { font-family: 'DM Serif Display', serif; font-size: 1.35rem; color: var(--green); letter-spacing: -0.01em; text-decoration: none; margin: 0; }
-    
-    .nav-links { list-style: none; display: flex; gap: 25px; margin: 0; padding: 0; align-items: center; }
-    .nav-links li a { color: var(--text); text-decoration: none; font-weight: 500; font-size: 15px; transition: color 0.3s; }
-    .nav-links li a:hover { color: var(--green); }
-    .nav-register { background-color: var(--green); color: white !important; padding: 10px 24px; border-radius: 30px; font-weight: 600; }
-
-    .main-content { padding: 40px 20px; }
-    .container { max-width: 1100px; margin: 0 auto; }
-    .section-header { text-align: center; margin-bottom: 30px; }
-    .section-header h2 { font-family: 'DM Serif Display', serif; color: var(--green); font-size: 32px; margin: 0; }
-
-    .controls-container { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
-    .search-input, .filter-select { padding: 12px 16px; border: 1px solid #ddd; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 14px; }
-    .search-input { flex: 1; min-width: 250px; }
-
-    .card-container { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 24px rgba(31, 78, 61, 0.08); }
-    .table-wrapper { overflow-x: auto; }
-    table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 800px; }
-    th, td { padding: 18px 15px; text-align: left; border-bottom: 1px solid #eee; }
-    th { background-color: var(--green); color: white; font-weight: 500; font-size: 13px; text-transform: uppercase; }
-    th:first-child { border-top-left-radius: 12px; }
-    th:last-child { border-top-right-radius: 12px; }
-
-    .status { padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; color: white; display: inline-block; }
-    .above-srp { background-color: #e74c3c; }
-    .at-srp { background-color: #f1c40f; color: #333; }
-    .below-srp { background-color: #2ecc71; }
-  </style>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/app.css" />
 </head>
-<body>
+<body class="app-body">
 
-  <header class="navbar">
-    <div class="nav-inner">
-      <a href="../index.html" class="logo">MarketMeter</a>
-      <nav>
-        <ul class="nav-links">
-          <li><a href="../index.html">Home</a></li>
-          <li><a href="dashboard.html" style="color: var(--green); font-weight: 600;">Catalog</a></li>
-          <li><a href="submit-price.html">Submit Price</a></li>
-          <li><a href="login.html">Login</a></li>
-          <li><a href="register.html" class="nav-register">Register</a></li>
+  <!-- ===================== TOP BAR ===================== -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="../index.html" class="topbar-brand">MarketMeter</a>
+    </div>
+
+    <div class="topbar-center">
+      <p class="topbar-title">Market Price Catalog</p>
+    </div>
+
+    <div class="topbar-right">
+      <button class="notif-btn" id="notifBtn" aria-label="Notifications">
+        <div class="notif-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="notif-badge" id="notifBadge">3</span>
+        </div>
+      </button>
+
+      <div class="notif-dropdown" id="notifDropdown">
+        <div class="notif-dropdown-header">
+          <span>Notifications</span>
+          <button class="notif-clear" id="notifClear">Mark all read</button>
+        </div>
+        <ul class="notif-list">
+          <li class="notif-item notif-item--unread">
+            <div class="notif-dot"></div>
+            <div class="notif-text">
+              <p>Your submission for <strong>White Rice (5kg)</strong> was confirmed.</p>
+              <span class="notif-time">2 hours ago</span>
+            </div>
+          </li>
+          <li class="notif-item notif-item--unread">
+            <div class="notif-dot"></div>
+            <div class="notif-text">
+              <p>New SRP update for <strong>Cooking Oil</strong> is available.</p>
+              <span class="notif-time">5 hours ago</span>
+            </div>
+          </li>
+          <li class="notif-item notif-item--unread">
+            <div class="notif-dot"></div>
+            <div class="notif-text">
+              <p>Your account was successfully created. Welcome!</p>
+              <span class="notif-time">1 day ago</span>
+            </div>
+          </li>
         </ul>
-      </nav>
+      </div>
     </div>
   </header>
 
-  <div class="main-content">
-    <div class="container">
-      <div class="section-header">
-        <h2>Market Price Catalog</h2>
+  <!-- ===================== APP SHELL ===================== -->
+  <div class="app-shell">
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside class="sidebar" id="sidebar">
+
+      <!-- Profile Card -->
+      <div class="profile-card">
+        <div class="profile-avatar">
+          <span id="avatarInitials">GU</span>
+        </div>
+        <div class="profile-info">
+          <p class="profile-name" id="profileName">Guest User</p>
+          <p class="profile-email" id="profileEmail">guest@marketmeter.ph</p>
+        </div>
       </div>
-      
-      <div class="card-container">
-        <div class="controls-container">
-          <input type="text" id="searchInput" class="search-input" placeholder="Search product or location...">
-          <select id="filterStatus" class="filter-select">
+
+      <!-- Profile Stats -->
+      <div class="profile-stats">
+        <div class="stat-item">
+          <span class="stat-value" id="statSubmissions">0</span>
+          <span class="stat-label">Submissions</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-value" id="statMemberSince">—</span>
+          <span class="stat-label">Member Since</span>
+        </div>
+      </div>
+
+      <!-- Sidebar Nav -->
+      <nav class="sidebar-nav">
+        <p class="sidebar-nav-label">Navigation</p>
+        <ul>
+          <li>
+            <a href="dashboard.html" class="sidebar-link sidebar-link--active">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+              </svg>
+              Dashboard
+            </a>
+          </li>
+          <li>
+            <a href="submit-price.html" class="sidebar-link">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Submit Price
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Logout -->
+      <div class="sidebar-footer">
+        <a href="login.html" class="sidebar-logout">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          Logout
+        </a>
+      </div>
+    </aside>
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ===================== MAIN CONTENT ===================== -->
+    <main class="app-main">
+
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <div>
+          <h2 class="welcome-title">Welcome back, <span id="welcomeName">Guest</span>.</h2>
+          <p class="welcome-sub">Browse and compare current market prices against official SRP.</p>
+        </div>
+        <a href="submit-price.html" class="btn btn-primary">Submit a Price</a>
+      </div>
+
+      <!-- Table Card -->
+      <div class="content-section">
+        <div class="section-row">
+          <h3 class="content-section-title">Market Price Catalog</h3>
+          <a href="submit-price.html" class="section-action">Add Entry</a>
+        </div>
+
+        <!-- Search & Filter row -->
+        <div class="catalog-controls">
+          <input
+            type="text"
+            id="searchInput"
+            class="catalog-search"
+            placeholder="Search product or location..."
+          />
+          <select id="filterStatus" class="catalog-filter">
             <option value="all">All Comparisons</option>
             <option value="above">Above SRP</option>
             <option value="below">Below SRP</option>
@@ -79,8 +173,9 @@
           </select>
         </div>
 
+        <!-- Data table -->
         <div class="table-wrapper">
-          <table>
+          <table class="data-table">
             <thead>
               <tr>
                 <th>Product</th>
@@ -95,63 +190,78 @@
           </table>
         </div>
       </div>
-    </div>
+
+    </main>
   </div>
 
+  <!-- ===================== ORIGINAL DASHBOARD JS (unchanged) ===================== -->
   <script>
     const srpDatabase = {
-        "Well-Milled Rice (1kg)": 50.00,
-        "Regular Milled Rice (1kg)": 43.00,
-        "Refined Sugar (1kg)": 85.00,
-        "Red Onion (1kg)": 120.00,
-        "Garlic (1kg)": 90.00,
-        "Pork Liempo (1kg)": 315.00,
-        "Whole Chicken (1kg)": 200.00
+      "Well-Milled Rice (1kg)": 50.00,
+      "Regular Milled Rice (1kg)": 43.00,
+      "Refined Sugar (1kg)": 85.00,
+      "Red Onion (1kg)": 120.00,
+      "Garlic (1kg)": 90.00,
+      "Pork Liempo (1kg)": 315.00,
+      "Whole Chicken (1kg)": 200.00
     };
 
     function loadDynamicData() {
-        const tableBody = document.getElementById('priceTableBody');
-        const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-        const filterStatus = document.getElementById('filterStatus').value;
-        tableBody.innerHTML = ''; 
+      const tableBody   = document.getElementById('priceTableBody');
+      const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+      const filterStatus= document.getElementById('filterStatus').value;
+      tableBody.innerHTML = '';
 
-        let savedPrices = JSON.parse(localStorage.getItem('marketMeterData')) || [];
-        
-        if (savedPrices.length === 0) {
-            savedPrices = [
-                { product: "Refined Sugar (1kg)", location: "Bayan Public Market", price: 85.00, date: "2026-02-20" },
-                { product: "Well-Milled Rice (1kg)", location: "Pamilihang Bayan ng Rodriguez", price: 55.00, date: "2026-02-19" },
-                { product: "Red Onion (1kg)", location: "San Mateo Market", price: 110.00, date: "2026-02-19" }
-            ];
-            localStorage.setItem('marketMeterData', JSON.stringify(savedPrices));
+      let savedPrices = JSON.parse(localStorage.getItem('marketMeterData')) || [];
+
+      if (savedPrices.length === 0) {
+        savedPrices = [
+          { product: "Refined Sugar (1kg)",      location: "Bayan Public Market",              price: 85.00, date: "2026-02-20" },
+          { product: "Well-Milled Rice (1kg)",   location: "Pamilihang Bayan ng Rodriguez",    price: 55.00, date: "2026-02-19" },
+          { product: "Red Onion (1kg)",           location: "San Mateo Market",                price: 110.00, date: "2026-02-19" }
+        ];
+        localStorage.setItem('marketMeterData', JSON.stringify(savedPrices));
+      }
+
+      [...savedPrices].reverse().forEach(item => {
+        const srp  = srpDatabase[item.product] || 0;
+        const diff = item.price - srp;
+        let statusCategory = 'equal';
+        let badge = `<span class="badge badge--equal">Equal to SRP</span>`;
+
+        if (diff > 0) {
+          statusCategory = 'above';
+          badge = `<span class="badge badge--above">+&#8369;${diff.toFixed(2)} Above</span>`;
+        } else if (diff < 0) {
+          statusCategory = 'below';
+          badge = `<span class="badge badge--below">&#8369;${Math.abs(diff).toFixed(2)} Below</span>`;
         }
 
-        [...savedPrices].reverse().forEach(item => {
-            const srp = srpDatabase[item.product] || 0;
-            const diff = item.price - srp;
-            let statusCategory = 'equal';
-            let badge = `<span class="status at-srp">Equal to SRP</span>`;
-            
-            if (diff > 0) {
-                statusCategory = 'above';
-                badge = `<span class="status above-srp">+₱${diff.toFixed(2)} Above</span>`;
-            } else if (diff < 0) {
-                statusCategory = 'below';
-                badge = `<span class="status below-srp">₱${Math.abs(diff).toFixed(2)} Below</span>`;
-            }
-
-            if ((item.product.toLowerCase().includes(searchQuery) || item.location.toLowerCase().includes(searchQuery)) && 
-                (filterStatus === 'all' || filterStatus === statusCategory)) {
-                const row = document.createElement('tr');
-                row.innerHTML = `<td>${item.product}</td><td>${item.location}</td><td>₱${parseFloat(item.price).toFixed(2)}</td><td>₱${srp.toFixed(2)}</td><td>${item.date}</td><td>${badge}</td>`;
-                tableBody.appendChild(row);
-            }
-        });
+        if (
+          (item.product.toLowerCase().includes(searchQuery) || item.location.toLowerCase().includes(searchQuery)) &&
+          (filterStatus === 'all' || filterStatus === statusCategory)
+        ) {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${item.product}</td>
+            <td>${item.location}</td>
+            <td>&#8369;${parseFloat(item.price).toFixed(2)}</td>
+            <td>&#8369;${srp.toFixed(2)}</td>
+            <td>${item.date}</td>
+            <td>${badge}</td>
+          `;
+          tableBody.appendChild(row);
+        }
+      });
     }
 
     document.getElementById('searchInput').addEventListener('input', loadDynamicData);
     document.getElementById('filterStatus').addEventListener('change', loadDynamicData);
-    window.onload = loadDynamicData;
+    window.addEventListener('load', loadDynamicData);
   </script>
+
+  <!-- Shared layout JS -->
+  <script src="app.js"></script>
+
 </body>
 </html>
