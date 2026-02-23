@@ -171,39 +171,91 @@
   </div>
 
   <script>
-    /* Set today's date */
-    const today         = new Date();
-    const formattedDate = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-    document.getElementById('submitDate').value = formattedDate;
+  /* 1. INITIALIZE PAGE DATA */
+  const today = new Date();
+  const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  document.getElementById('submitDate').value = formattedDate;
 
-    document.getElementById('submitPriceForm').addEventListener('submit', function (event) {
-      event.preventDefault();
-      const product  = document.getElementById('productName').value;
-      const location = document.getElementById('marketLocation').value;
-      const price    = document.getElementById('price').value;
+  // Get session from sessionStorage (as defined in your auth.js)
+  let session = JSON.parse(sessionStorage.getItem('mmSession'));
 
-      if (!product || !location || !price) return;
+  // Redirect if not logged in
+  if (!session) {
+    window.location.href = 'login.html';
+  } else {
+    // Fill sidebar with session data
+    document.getElementById('profileName').textContent = session.fullName;
+    document.getElementById('profileEmail').textContent = session.email;
+    document.getElementById('statSubmissions').textContent = session.submissions || 0;
+    document.getElementById('statMemberSince').textContent = session.memberSince;
+    document.getElementById('avatarInitials').textContent = session.fullName.split(' ').map(n => n[0]).join('').toUpperCase();
+  }
 
-      /* Save entry to localStorage */
-      const existing = JSON.parse(localStorage.getItem('marketMeterData')) || [];
-      existing.push({ product, location, price: parseFloat(price), date: formattedDate });
-      localStorage.setItem('marketMeterData', JSON.stringify(existing));
+  /* 2. SUBMISSION LOGIC */
+  document.getElementById('submitPriceForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
 
-      /* Increment submission count in user record + session */
-      if (typeof incrementSubmissions === 'function') incrementSubmissions();
+    const product = document.getElementById('productName').value;
+    const location = document.getElementById('marketLocation').value;
+    const price = document.getElementById('price').value;
+    const submitBtn = this.querySelector('button[type="submit"]');
 
-      /* Show success message */
-      const msg = document.getElementById('submitSuccess');
-      msg.textContent = `Success! You submitted \u20B1${parseFloat(price).toFixed(2)} for ${product} at ${location}. It is now pending community verification.`;
-      msg.style.display = 'block';
-      msg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (!product || !location || !price) return;
 
-      this.reset();
-      document.getElementById('submitDate').value = formattedDate;
+    // UI Loading state
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Processing...";
 
-      setTimeout(() => { msg.style.display = 'none'; }, 5000);
-    });
-  </script>
+    try {
+      /* A. Update Backend (server.js) */
+      const response = await fetch('http://localhost:3000/api/increment-submissions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: session.id })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        /* B. Update Local Session Storage so the count persists across pages */
+        session.submissions = result.submissions;
+        sessionStorage.setItem('mmSession', JSON.stringify(session));
+
+        /* C. Update Sidebar UI */
+        document.getElementById('statSubmissions').textContent = result.submissions;
+
+        /* D. Save the actual price data to localStorage for the Dashboard/Catalog */
+        const marketData = JSON.parse(localStorage.getItem('marketMeterData')) || [];
+        marketData.push({
+          product,
+          location,
+          price: parseFloat(price),
+          date: formattedDate,
+          submittedBy: session.fullName
+        });
+        localStorage.setItem('marketMeterData', JSON.stringify(marketData));
+
+        /* E. Show Success Message */
+        const msg = document.getElementById('submitSuccess');
+        msg.textContent = `Success! You submitted ₱${parseFloat(price).toFixed(2)} for ${product}. Count updated!`;
+        msg.style.display = 'block';
+        msg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        this.reset();
+        document.getElementById('submitDate').value = formattedDate;
+        setTimeout(() => { msg.style.display = 'none'; }, 5000);
+      } else {
+        alert("Error updating submission: " + result.message);
+      }
+    } catch (error) {
+      console.error("Submission failed:", error);
+      alert("Server connection failed. Price saved locally only.");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Submit Price for Verification";
+    }
+  });
+</script>
 
   <script src="js/app.js"></script>
 </body>

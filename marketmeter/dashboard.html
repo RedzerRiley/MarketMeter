@@ -12,7 +12,6 @@
 </head>
 <body class="app-body">
 
-  <!-- TOP BAR -->
   <header class="topbar">
     <div class="topbar-left">
       <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
@@ -32,28 +31,11 @@
           <span class="notif-badge" id="notifBadge">1</span>
         </div>
       </button>
-      <div class="notif-dropdown" id="notifDropdown">
-        <div class="notif-dropdown-header">
-          <span>Notifications</span>
-          <button class="notif-clear" id="notifClear">Mark all read</button>
-        </div>
-        <ul class="notif-list">
-          <li class="notif-item notif-item--unread">
-            <div class="notif-dot"></div>
-            <div class="notif-text">
-              <p>Welcome to MarketMeter! Start by submitting a price.</p>
-              <span class="notif-time">Just now</span>
-            </div>
-          </li>
-        </ul>
-      </div>
     </div>
   </header>
 
-  <!-- APP SHELL -->
   <div class="app-shell">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
       <div class="profile-card">
         <div class="profile-avatar"><span id="avatarInitials">--</span></div>
@@ -108,15 +90,20 @@
     </aside>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- MAIN CONTENT -->
     <main class="app-main">
 
       <div class="welcome-banner">
         <div>
-          <h2 class="welcome-title">Welcome back, <span id="welcomeName">...</span>.</h2>
+          <h2 class="welcome-title">Welcome back, <span id="welcomeName">User</span>.</h2>
           <p class="welcome-sub">Browse and compare current market prices against official SRP.</p>
         </div>
-        <a href="submit-price.html" class="btn btn-primary">Submit a Price</a>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="submit-price.html" class="btn btn-primary">Submit a Price</a>
+          <button id="exportCsv" class="btn btn-primary" style="background-color: #1D6F42; border-color: #1D6F42; display: flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export Excel
+          </button>
+        </div>
       </div>
 
       <div class="content-section">
@@ -141,8 +128,9 @@
                 <th>Market Location</th>
                 <th>Posted Price</th>
                 <th>SRP</th>
-                <th>Date Reported</th>
                 <th>Status</th>
+                <th>Date Reported</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody id="priceTableBody"></tbody>
@@ -154,45 +142,63 @@
   </div>
 
   <script>
+    // 1. SRP REFERENCE DATA
     const srpDatabase = {
-      "Well-Milled Rice (1kg)":     50.00,
-      "Regular Milled Rice (1kg)":  43.00,
-      "Refined Sugar (1kg)":        85.00,
-      "Red Onion (1kg)":           120.00,
-      "Garlic (1kg)":               90.00,
-      "Pork Liempo (1kg)":         315.00,
-      "Whole Chicken (1kg)":       200.00
+      "Well-Milled Rice (1kg)": 50.00,
+      "Regular Milled Rice (1kg)": 43.00,
+      "Refined Sugar (1kg)": 85.00,
+      "Red Onion (1kg)": 120.00,
+      "Garlic (1kg)": 90.00,
+      "Pork Liempo (1kg)": 315.00,
+      "Whole Chicken (1kg)": 200.00
     };
 
+    // 2. SESSION SYNC (Sidebar & Welcome)
+    function syncUserSession() {
+      const session = JSON.parse(sessionStorage.getItem('mmSession'));
+      if (!session) {
+        window.location.href = 'login.html';
+        return;
+      }
+      document.getElementById('welcomeName').textContent = session.fullName.split(' ')[0];
+      document.getElementById('profileName').textContent = session.fullName;
+      document.getElementById('profileEmail').textContent = session.email;
+      document.getElementById('statSubmissions').textContent = session.submissions || 0;
+      document.getElementById('statMemberSince').textContent = session.memberSince || '2026';
+      
+      const initials = session.fullName.split(' ').map(n => n[0]).join('').toUpperCase();
+      document.getElementById('avatarInitials').textContent = initials;
+    }
+
+    // 3. LOAD DATA & RENDER TABLE
     function loadDynamicData() {
-      const tableBody    = document.getElementById('priceTableBody');
-      const searchQuery  = document.getElementById('searchInput').value.toLowerCase();
+      const tableBody = document.getElementById('priceTableBody');
+      const searchQuery = document.getElementById('searchInput').value.toLowerCase();
       const filterStatus = document.getElementById('filterStatus').value;
       tableBody.innerHTML = '';
 
       let savedPrices = JSON.parse(localStorage.getItem('marketMeterData')) || [];
 
+      // Optional: Seed default data if empty
       if (savedPrices.length === 0) {
         savedPrices = [
-          { product: "Refined Sugar (1kg)",     location: "Bayan Public Market",           price: 85.00,  date: "2026-02-20" },
-          { product: "Well-Milled Rice (1kg)",  location: "Pamilihang Bayan ng Rodriguez", price: 55.00,  date: "2026-02-19" },
-          { product: "Red Onion (1kg)",         location: "San Mateo Market",              price: 110.00, date: "2026-02-19" }
+          { id: Date.now(), product: "Refined Sugar (1kg)", location: "Bayan Public Market", price: 85.00, date: "2026-02-20" }
         ];
         localStorage.setItem('marketMeterData', JSON.stringify(savedPrices));
       }
 
-      [...savedPrices].reverse().forEach(item => {
-        const srp  = srpDatabase[item.product] || 0;
+      [...savedPrices].reverse().forEach((item, index) => {
+        const srp = srpDatabase[item.product] || 0;
         const diff = item.price - srp;
         let statusCategory = 'equal';
         let badge = '<span class="badge badge--equal">Equal to SRP</span>';
 
         if (diff > 0) {
           statusCategory = 'above';
-          badge = `<span class="badge badge--above">+&#8369;${diff.toFixed(2)} Above</span>`;
+          badge = `<span class="badge badge--above">+₱${diff.toFixed(2)} Above</span>`;
         } else if (diff < 0) {
           statusCategory = 'below';
-          badge = `<span class="badge badge--below">&#8369;${Math.abs(diff).toFixed(2)} Below</span>`;
+          badge = `<span class="badge badge--below">₱${Math.abs(diff).toFixed(2)} Below</span>`;
         }
 
         const matchSearch = item.product.toLowerCase().includes(searchQuery) || item.location.toLowerCase().includes(searchQuery);
@@ -203,23 +209,62 @@
           row.innerHTML = `
             <td>${item.product}</td>
             <td>${item.location}</td>
-            <td>&#8369;${parseFloat(item.price).toFixed(2)}</td>
-            <td>&#8369;${srp.toFixed(2)}</td>
-            <td>${item.date}</td>
+            <td>₱${parseFloat(item.price).toFixed(2)}</td>
+            <td>₱${srp.toFixed(2)}</td>
             <td>${badge}</td>
+            <td>${item.date}</td>
+            <td><button onclick="deleteEntry(${index})" style="background:none; border:none; color:#ff4d4d; cursor:pointer; font-weight:600;">Delete</button></td>
           `;
           tableBody.appendChild(row);
         }
       });
 
       if (tableBody.children.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#888;padding:32px;">No entries found.</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#888;padding:32px;">No entries found.</td></tr>';
       }
     }
 
+    // 4. DELETE ENTRY
+    window.deleteEntry = function(index) {
+      if(confirm("Are you sure you want to delete this report?")) {
+        let savedPrices = JSON.parse(localStorage.getItem('marketMeterData')) || [];
+        savedPrices.splice(savedPrices.length - 1 - index, 1);
+        localStorage.setItem('marketMeterData', JSON.stringify(savedPrices));
+        loadDynamicData();
+      }
+    }
+
+    // 5. EXPORT TO EXCEL (CSV)
+    document.getElementById('exportCsv').addEventListener('click', function() {
+      const data = JSON.parse(localStorage.getItem('marketMeterData')) || [];
+      if (data.length === 0) return alert("No data to export!");
+
+      let csvContent = "Product,Market Location,Posted Price,Official SRP,Status,Date Reported\n";
+      
+      data.forEach(item => {
+        const srp = srpDatabase[item.product] || 0;
+        const diff = item.price - srp;
+        const status = diff > 0 ? "Above SRP" : diff < 0 ? "Below SRP" : "Equal";
+        csvContent += `"${item.product}","${item.location}","${item.price}","${srp}","${status}","${item.date}"\n`;
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "MarketMeter_Report.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+
+    // INIT
     document.getElementById('searchInput').addEventListener('input', loadDynamicData);
     document.getElementById('filterStatus').addEventListener('change', loadDynamicData);
-    window.addEventListener('load', loadDynamicData);
+    window.addEventListener('load', () => {
+      syncUserSession();
+      loadDynamicData();
+    });
   </script>
 
   <script src="js/app.js"></script>

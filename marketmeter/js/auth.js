@@ -138,24 +138,34 @@ function initLoginForm() {
     e.preventDefault();
     if (!validateLoginEmail() | !validateLoginPassword()) return;
 
-    const email    = emailInput.value.trim().toLowerCase();
+    const email = emailInput.value.trim().toLowerCase();
     const password = passwordInput.value;
 
     setButtonLoading('loginBtn', true, 'Login');
 
-    const user = findUserByEmail(email);
-    if (!user) {
-      showAlert('loginGeneralError', 'Invalid email or password.');
-      setButtonLoading('loginBtn', false, 'Login');
-      return;
-    }
+    try {
+        // Ask the Backend Server to verify the user
+        const response = await fetch('http://localhost:3000/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
 
-    const hashed = await sha256(password);
-    if (hashed !== user.password) {
-      showAlert('loginGeneralError', 'Invalid email or password.');
-      setButtonLoading('loginBtn', false, 'Login');
-      return;
+        const result = await response.json();
+
+        if (result.success) {
+            // Save the ID and data sent by the SERVER
+            saveSession(result.user);
+            window.location.href = 'dashboard.html';
+        } else {
+            showAlert('loginGeneralError', 'Invalid email or password.');
+            setButtonLoading('loginBtn', false, 'Login');
+        }
+    } catch (error) {
+        showAlert('loginGeneralError', 'Server connection failed.');
+        setButtonLoading('loginBtn', false, 'Login');
     }
+});
 
     /* Build a safe session object (no password) */
     saveSession({
@@ -168,8 +178,8 @@ function initLoginForm() {
 
     /* Redirect to dashboard */
     window.location.href = 'dashboard.html';
-  });
-}
+  };
+
 
 function validateLoginEmail() {
   const v = document.getElementById('loginEmail').value.trim();
@@ -192,7 +202,7 @@ function validateLoginPassword() {
    REGISTER FORM
    ============================================================ */
 
-function initRegisterForm() {
+async function initRegisterForm() {
   const form = document.getElementById('registerForm');
   if (!form) return;
 
@@ -224,19 +234,36 @@ function initRegisterForm() {
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    const nameOk    = validateRegName();
-    const emailOk   = validateRegEmail();
-    const passOk    = validateRegPassword();
-    const confirmOk = validateRegConfirm();
-    if (!nameOk || !emailOk || !passOk || !confirmOk) return;
+    if (!validateRegName() || !validateRegEmail() || !validateRegPassword() || !validateRegConfirm()) return;
 
     const fullName = nameInput.value.trim();
-    const email    = emailInput.value.trim().toLowerCase();
+    const email = emailInput.value.trim().toLowerCase();
     const password = passwordInput.value;
 
     setButtonLoading('registerBtn', true, 'Create an Account');
-    showAlert('registerGeneralError', '');
-    showAlert('registerSuccess', '');
+
+    try {
+        // Send registration to the Backend Server
+        const response = await fetch('http://localhost:3000/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fullName, email, password })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showAlert('registerSuccess', 'Account created! Redirecting to login...');
+            setTimeout(() => { window.location.href = 'login.html'; }, 2000);
+        } else {
+            showAlert('registerGeneralError', result.message || 'Registration failed.');
+            setButtonLoading('registerBtn', false, 'Create an Account');
+        }
+    } catch (error) {
+        showAlert('registerGeneralError', 'Cannot connect to server. Is node server.js running?');
+        setButtonLoading('registerBtn', false, 'Create an Account');
+    }
+});
 
     /* Check for duplicate email */
     if (findUserByEmail(email)) {
@@ -264,8 +291,8 @@ function initRegisterForm() {
     showAlert('registerSuccess', 'Account created! Redirecting to login...');
 
     setTimeout(() => { window.location.href = 'login.html'; }, 2000);
-  });
-}
+  };
+
 
 function validateRegName() {
   const v = document.getElementById('regName').value.trim();
