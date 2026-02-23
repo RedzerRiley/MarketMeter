@@ -8,9 +8,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="marketmeter/css/style.css" />
-
   <style>
-    /* ---- Logged-in nav links ---- */
+
+    /* ======================================================
+       USER NAV — logged-in link list
+    ====================================================== */
     .nav-user-links {
       display: flex;
       align-items: center;
@@ -27,8 +29,10 @@
     }
     .nav-user-links a:hover { color: #1F4E3D; }
 
-    /* ---- User avatar button ---- */
-    .user-menu { position: relative; margin-left: 20px; }
+    /* ======================================================
+       USER AVATAR BUTTON
+    ====================================================== */
+    .user-menu { position: relative; margin-left: 40px; }
 
     .user-btn {
       display: flex;
@@ -69,7 +73,9 @@
     }
     .user-menu.is-open .user-caret { transform: rotate(180deg); }
 
-    /* ---- Dropdown panel ---- */
+    /* ======================================================
+       DROPDOWN PANEL
+    ====================================================== */
     .user-dropdown {
       display: none;
       position: absolute;
@@ -105,7 +111,6 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
     .dropdown-item {
       display: block;
       padding: 10px 16px;
@@ -117,20 +122,55 @@
     }
     .dropdown-item:last-child { border-bottom: none; }
     .dropdown-item:hover { background-color: #EAF1EE; color: #1F4E3D; }
-
     .dropdown-item--logout { color: #C0392B !important; }
     .dropdown-item--logout:hover { background-color: #FDF4F3 !important; }
+
+    /* ======================================================
+       HERO IMAGE — override any clipping from style.css
+    ====================================================== */
+    .hero          { overflow: visible !important; }
+    .hero-inner    { overflow: visible !important; align-items: center; }
+
+    .hero-image {
+      flex: 1 1 48%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible !important;
+    }
+    .hero-image img {
+      width: 132%;
+      max-width: 1000px;
+      height: auto;
+      display: block;
+      border-radius: 12px;
+      box-shadow:
+        0 4px 6px rgba(0,0,0,0.04),
+        0 12px 40px rgba(31,78,61,0.14);
+      border: 1px solid #DDD9D3;
+    }
+
+    /* ======================================================
+       ABOUT CARD IMAGES
+    ====================================================== */
+    .about-card img.placeholder-card {
+      max-width: 150px;
+      height: auto;
+      display: block;
+      margin-bottom: 16px;
+    }
+
   </style>
 </head>
 <body>
 
-  <!-- Navigation -->
+  <!-- ===================== NAVBAR ===================== -->
   <header class="navbar">
     <div class="container nav-inner">
       <a href="#" class="logo">MarketMeter</a>
       <nav style="display:flex; align-items:center;">
 
-        <!-- GUEST NAV (default) -->
+        <!-- Guest nav -->
         <ul class="nav-links" id="navGuest">
           <li><a href="#">Home</a></li>
           <li><a href="#about">About</a></li>
@@ -139,13 +179,12 @@
           <li><a href="marketmeter/register.html" class="nav-register">Register</a></li>
         </ul>
 
-        <!-- USER NAV (logged in) — hidden until JS shows it -->
+        <!-- Logged-in nav -->
         <div id="navUser" style="display:none; align-items:center;">
           <ul class="nav-links nav-user-links">
             <li><a href="#">Home</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#how-it-works">How It Works</a></li>
-            <li><a href="marketmeter/dashboard.html">Dashboard</a></li>
           </ul>
 
           <div class="user-menu" id="userMenu">
@@ -156,7 +195,6 @@
                 <polyline points="6 9 12 15 18 9"/>
               </svg>
             </button>
-
             <div class="user-dropdown" id="userDropdown">
               <div class="dropdown-header">
                 <div class="dropdown-header-name"  id="dropdownFullName">Full Name</div>
@@ -173,7 +211,7 @@
     </div>
   </header>
 
-  <!-- Hero Section -->
+  <!-- ===================== HERO ===================== -->
   <section class="hero">
     <div class="container hero-inner">
       <div class="hero-text">
@@ -188,14 +226,15 @@
         </div>
       </div>
       <div class="hero-image">
-        <div class="placeholder-image placeholder-hero">
-          <span>Market Price Dashboard Preview</span>
-        </div>
+        <img
+          src="assets/Screenshot 2026-02-23 214155.png"
+          alt="Market Price Dashboard Preview"
+        />
       </div>
     </div>
   </section>
 
-  <!-- About Section -->
+  <!-- ===================== ABOUT ===================== -->
   <section class="about" id="about">
     <div class="container">
       <div class="section-header">
@@ -205,19 +244,19 @@
       <div class="about-grid">
 
         <div class="about-card">
-          <div class="placeholder-image placeholder-card"><span>Transparent Pricing</span></div>
+          <img src="assets/transparent-pricing-icon.png" alt="Transparent Pricing" class="placeholder-card" />
           <h3>Transparent Pricing</h3>
           <p>Access real, community-submitted prices from markets across the Philippines. No guesswork, no hidden markups. Just honest data to help you budget better and spend wisely.</p>
         </div>
 
         <div class="about-card">
-          <div class="placeholder-image placeholder-card"><span>Community Verified Data</span></div>
+          <img src="assets/community-verified-icon.png" alt="Community Verified Data" class="placeholder-card" />
           <h3>Community Verified Data</h3>
           <p>Every price submission goes through community confirmation before it appears publicly. This ensures that the data you see reflects what is actually happening in local wet markets and grocery stores.</p>
         </div>
 
         <div class="about-card">
-          <div class="placeholder-image placeholder-card"><span>SRP Comparison</span></div>
+          <img src="assets/srp-comparison-icon.png" alt="SRP Comparison" class="placeholder-card" />
           <h3>SRP Comparison</h3>
           <p>MarketMeter integrates official Suggested Retail Prices from the Department of Trade and Industry so you can immediately see when a merchant is selling above the regulated maximum.</p>
         </div>
@@ -226,7 +265,7 @@
     </div>
   </section>
 
-  <!-- How It Works Section -->
+  <!-- ===================== HOW IT WORKS ===================== -->
   <section class="how-it-works" id="how-it-works">
     <div class="container">
       <div class="section-header">
@@ -263,7 +302,7 @@
     </div>
   </section>
 
-  <!-- Call to Action Section -->
+  <!-- ===================== CTA ===================== -->
   <section class="cta">
     <div class="container cta-inner">
       <h2>Start Making Smarter Buying Decisions</h2>
@@ -272,7 +311,7 @@
     </div>
   </section>
 
-  <!-- Footer -->
+  <!-- ===================== FOOTER ===================== -->
   <footer class="footer">
     <div class="container footer-inner">
       <div class="footer-brand">
@@ -290,101 +329,93 @@
   </footer>
 
   <script>
-    (function () {
-      'use strict';
+  (function () {
+    'use strict';
 
-      const SESSION_KEY = 'mmSession';
+    var SESSION_KEY = 'mmSession';
 
-      function getSession() {
-        try { return JSON.parse(sessionStorage.getItem(SESSION_KEY)); }
-        catch (e) { return null; }
+    function getSession() {
+      try { return JSON.parse(sessionStorage.getItem(SESSION_KEY)); }
+      catch (e) { return null; }
+    }
+
+    function getInitials(name) {
+      if (!name) return '?';
+      var parts = name.trim().split(' ');
+      return parts.length >= 2
+        ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+        : name.slice(0, 2).toUpperCase();
+    }
+
+    function setText(id, val) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = val;
+    }
+
+    function applySession() {
+      var user = getSession();
+      if (user) {
+        document.getElementById('navGuest').style.display = 'none';
+        document.getElementById('navUser').style.display  = 'flex';
+
+        setText('navAvatar',        getInitials(user.fullName));
+        setText('navFirstName',     user.fullName.split(' ')[0]);
+        setText('dropdownFullName', user.fullName);
+        setText('dropdownEmail',    user.email);
+
+        var b1 = document.getElementById('heroBtn1');
+        var b2 = document.getElementById('heroBtn2');
+        if (b1) { b1.href = 'marketmeter/dashboard.html';    b1.textContent = 'Go to Dashboard'; }
+        if (b2) { b2.href = 'marketmeter/submit-price.html'; b2.textContent = 'Submit a Price'; }
+
+        var cta = document.getElementById('ctaBtn');
+        if (cta) { cta.href = 'marketmeter/dashboard.html'; cta.textContent = 'Go to Dashboard'; }
+
+      } else {
+        document.getElementById('navGuest').style.display = '';
+        document.getElementById('navUser').style.display  = 'none';
       }
+    }
 
-      function getInitials(name) {
-        if (!name) return '?';
-        const parts = name.trim().split(' ');
-        return parts.length >= 2
-          ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
-          : name.slice(0, 2).toUpperCase();
-      }
+    function initDropdown() {
+      var menu     = document.getElementById('userMenu');
+      var btn      = document.getElementById('userBtn');
+      var dropdown = document.getElementById('userDropdown');
+      if (!menu || !btn) return;
 
-      function setText(id, val) {
-        const el = document.getElementById(id);
-        if (el) el.textContent = val;
-      }
-
-      function applySession() {
-        const user = getSession();
-
-        if (user) {
-          /* Show user nav, hide guest nav */
-          document.getElementById('navGuest').style.display = 'none';
-          document.getElementById('navUser').style.display  = 'flex';
-
-          /* Populate user details */
-          setText('navAvatar',        getInitials(user.fullName));
-          setText('navFirstName',     user.fullName.split(' ')[0]);
-          setText('dropdownFullName', user.fullName);
-          setText('dropdownEmail',    user.email);
-
-          /* Update hero buttons */
-          const b1 = document.getElementById('heroBtn1');
-          const b2 = document.getElementById('heroBtn2');
-          if (b1) { b1.href = 'marketmeter/dashboard.html';    b1.textContent = 'Go to Dashboard'; }
-          if (b2) { b2.href = 'marketmeter/submit-price.html'; b2.textContent = 'Submit a Price'; }
-
-          /* Update CTA */
-          const cta = document.getElementById('ctaBtn');
-          if (cta) { cta.href = 'marketmeter/dashboard.html'; cta.textContent = 'Go to Dashboard'; }
-
-        } else {
-          document.getElementById('navGuest').style.display = '';
-          document.getElementById('navUser').style.display  = 'none';
-        }
-      }
-
-      function initDropdown() {
-        const menu     = document.getElementById('userMenu');
-        const btn      = document.getElementById('userBtn');
-        const dropdown = document.getElementById('userDropdown');
-        if (!menu || !btn) return;
-
-        /* Click to toggle */
-        btn.addEventListener('click', function (e) {
-          e.stopPropagation();
-          const open = menu.classList.toggle('is-open');
-          btn.setAttribute('aria-expanded', String(open));
-        });
-
-        /* Click outside closes */
-        document.addEventListener('click', function () {
-          menu.classList.remove('is-open');
-          btn.setAttribute('aria-expanded', 'false');
-        });
-
-        /* Prevent dropdown clicks from closing it */
-        if (dropdown) {
-          dropdown.addEventListener('click', function (e) { e.stopPropagation(); });
-        }
-      }
-
-      function initLogout() {
-        const btn = document.getElementById('logoutBtn');
-        if (!btn) return;
-        btn.addEventListener('click', function (e) {
-          e.preventDefault();
-          sessionStorage.removeItem(SESSION_KEY);
-          window.location.reload();
-        });
-      }
-
-      document.addEventListener('DOMContentLoaded', function () {
-        applySession();
-        initDropdown();
-        initLogout();
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var open = menu.classList.toggle('is-open');
+        btn.setAttribute('aria-expanded', String(open));
       });
 
-    })();
+      document.addEventListener('click', function () {
+        menu.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+      });
+
+      if (dropdown) {
+        dropdown.addEventListener('click', function (e) { e.stopPropagation(); });
+      }
+    }
+
+    function initLogout() {
+      var btn = document.getElementById('logoutBtn');
+      if (!btn) return;
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        sessionStorage.removeItem(SESSION_KEY);
+        window.location.reload();
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      applySession();
+      initDropdown();
+      initLogout();
+    });
+
+  }());
   </script>
 
 </body>
