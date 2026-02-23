@@ -8,6 +8,119 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="marketmeter/css/style.css" />
+
+  <style>
+    /* ---- Logged-in nav links ---- */
+    .nav-user-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-user-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #5C5C5C;
+      text-decoration: none;
+    }
+    .nav-user-links a:hover { color: #1F4E3D; }
+
+    /* ---- User avatar button ---- */
+    .user-menu { position: relative; margin-left: 20px; }
+
+    .user-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      border: 1.5px solid #1F4E3D;
+      border-radius: 40px;
+      padding: 5px 14px 5px 6px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #1F4E3D;
+      margin-left: 8px;
+    }
+    .user-btn:hover { background-color: #EAF1EE; }
+
+    .user-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background-color: #1F4E3D;
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .user-caret {
+      width: 10px;
+      height: 10px;
+      opacity: 0.55;
+      transition: transform 0.2s ease;
+    }
+    .user-menu.is-open .user-caret { transform: rotate(180deg); }
+
+    /* ---- Dropdown panel ---- */
+    .user-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      min-width: 190px;
+      background: #fff;
+      border: 1px solid #DDD9D3;
+      border-radius: 10px;
+      box-shadow: 0 8px 32px rgba(31,78,61,0.13);
+      z-index: 300;
+      overflow: hidden;
+    }
+    .user-menu.is-open .user-dropdown { display: block; }
+
+    .dropdown-header {
+      padding: 12px 16px 10px 16px;
+      border-bottom: 1px solid #EDECE9;
+    }
+    .dropdown-header-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #1A1A1A;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .dropdown-header-email {
+      font-size: 0.72rem;
+      color: #5C5C5C;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dropdown-item {
+      display: block;
+      padding: 10px 16px;
+      font-size: 0.83rem;
+      font-weight: 500;
+      color: #1A1A1A;
+      text-decoration: none;
+      border-bottom: 1px solid #F2F1EE;
+    }
+    .dropdown-item:last-child { border-bottom: none; }
+    .dropdown-item:hover { background-color: #EAF1EE; color: #1F4E3D; }
+
+    .dropdown-item--logout { color: #C0392B !important; }
+    .dropdown-item--logout:hover { background-color: #FDF4F3 !important; }
+  </style>
 </head>
 <body>
 
@@ -15,18 +128,47 @@
   <header class="navbar">
     <div class="container nav-inner">
       <a href="#" class="logo">MarketMeter</a>
-      <nav>
-        <ul class="nav-links">
-  <li><a href="#">Home</a></li>
-  <li><a href="#about">About</a></li>
-  <li><a href="#how-it-works">How It Works</a></li>
-  
-  <li><a href="marketmeter/dashboard.html">Catalog</a></li>
-  <li><a href="marketmeter/submit-price.html">Submit Price</a></li>
-  
-  <li><a href="marketmeter/login.html">Login</a></li>
-  <li><a href="marketmeter/register.html" class="nav-register">Register</a></li>
-      </ul>
+      <nav style="display:flex; align-items:center;">
+
+        <!-- GUEST NAV (default) -->
+        <ul class="nav-links" id="navGuest">
+          <li><a href="#">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="marketmeter/login.html" class="nav-login">Login</a></li>
+          <li><a href="marketmeter/register.html" class="nav-register">Register</a></li>
+        </ul>
+
+        <!-- USER NAV (logged in) — hidden until JS shows it -->
+        <div id="navUser" style="display:none; align-items:center;">
+          <ul class="nav-links nav-user-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="marketmeter/dashboard.html">Dashboard</a></li>
+          </ul>
+
+          <div class="user-menu" id="userMenu">
+            <button class="user-btn" id="userBtn" aria-haspopup="true" aria-expanded="false">
+              <div class="user-avatar" id="navAvatar">--</div>
+              <span id="navFirstName">User</span>
+              <svg class="user-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </button>
+
+            <div class="user-dropdown" id="userDropdown">
+              <div class="dropdown-header">
+                <div class="dropdown-header-name"  id="dropdownFullName">Full Name</div>
+                <div class="dropdown-header-email" id="dropdownEmail">email@example.com</div>
+              </div>
+              <a href="marketmeter/dashboard.html"    class="dropdown-item">Dashboard</a>
+              <a href="marketmeter/submit-price.html" class="dropdown-item">Submit Price</a>
+              <a href="#" class="dropdown-item dropdown-item--logout" id="logoutBtn">Logout</a>
+            </div>
+          </div>
+        </div>
+
       </nav>
     </div>
   </header>
@@ -41,8 +183,8 @@
           MarketMeter is a community-driven platform that lets Filipino consumers check, submit, and compare real market prices of basic goods against government-issued Suggested Retail Prices (SRP). Know what you should pay before you pay it.
         </p>
         <div class="hero-actions">
-          <a href="marketmeter/register.html" class="btn btn-primary">Get Started</a>
-          <a href="marketmeter/login.html" class="btn btn-outline">View Prices</a>
+          <a href="marketmeter/register.html" class="btn btn-primary" id="heroBtn1">Get Started</a>
+          <a href="marketmeter/login.html"    class="btn btn-outline"  id="heroBtn2">View Prices</a>
         </div>
       </div>
       <div class="hero-image">
@@ -63,25 +205,19 @@
       <div class="about-grid">
 
         <div class="about-card">
-          <div class="placeholder-image placeholder-card">
-            <span>Transparent Pricing</span>
-          </div>
+          <div class="placeholder-image placeholder-card"><span>Transparent Pricing</span></div>
           <h3>Transparent Pricing</h3>
           <p>Access real, community-submitted prices from markets across the Philippines. No guesswork, no hidden markups. Just honest data to help you budget better and spend wisely.</p>
         </div>
 
         <div class="about-card">
-          <div class="placeholder-image placeholder-card">
-            <span>Community Verified Data</span>
-          </div>
+          <div class="placeholder-image placeholder-card"><span>Community Verified Data</span></div>
           <h3>Community Verified Data</h3>
           <p>Every price submission goes through community confirmation before it appears publicly. This ensures that the data you see reflects what is actually happening in local wet markets and grocery stores.</p>
         </div>
 
         <div class="about-card">
-          <div class="placeholder-image placeholder-card">
-            <span>SRP Comparison</span>
-          </div>
+          <div class="placeholder-image placeholder-card"><span>SRP Comparison</span></div>
           <h3>SRP Comparison</h3>
           <p>MarketMeter integrates official Suggested Retail Prices from the Department of Trade and Industry so you can immediately see when a merchant is selling above the regulated maximum.</p>
         </div>
@@ -132,7 +268,7 @@
     <div class="container cta-inner">
       <h2>Start Making Smarter Buying Decisions</h2>
       <p>Join thousands of Filipino consumers using MarketMeter to stretch their budgets further and shop with confidence. Free to use, community-powered, always up to date.</p>
-      <a href="marketmeter/register.html" class="btn btn-primary">Create an Account</a>
+      <a href="marketmeter/register.html" class="btn btn-primary" id="ctaBtn">Create an Account</a>
     </div>
   </section>
 
@@ -152,6 +288,104 @@
       </nav>
     </div>
   </footer>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const SESSION_KEY = 'mmSession';
+
+      function getSession() {
+        try { return JSON.parse(sessionStorage.getItem(SESSION_KEY)); }
+        catch (e) { return null; }
+      }
+
+      function getInitials(name) {
+        if (!name) return '?';
+        const parts = name.trim().split(' ');
+        return parts.length >= 2
+          ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+          : name.slice(0, 2).toUpperCase();
+      }
+
+      function setText(id, val) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+      }
+
+      function applySession() {
+        const user = getSession();
+
+        if (user) {
+          /* Show user nav, hide guest nav */
+          document.getElementById('navGuest').style.display = 'none';
+          document.getElementById('navUser').style.display  = 'flex';
+
+          /* Populate user details */
+          setText('navAvatar',        getInitials(user.fullName));
+          setText('navFirstName',     user.fullName.split(' ')[0]);
+          setText('dropdownFullName', user.fullName);
+          setText('dropdownEmail',    user.email);
+
+          /* Update hero buttons */
+          const b1 = document.getElementById('heroBtn1');
+          const b2 = document.getElementById('heroBtn2');
+          if (b1) { b1.href = 'marketmeter/dashboard.html';    b1.textContent = 'Go to Dashboard'; }
+          if (b2) { b2.href = 'marketmeter/submit-price.html'; b2.textContent = 'Submit a Price'; }
+
+          /* Update CTA */
+          const cta = document.getElementById('ctaBtn');
+          if (cta) { cta.href = 'marketmeter/dashboard.html'; cta.textContent = 'Go to Dashboard'; }
+
+        } else {
+          document.getElementById('navGuest').style.display = '';
+          document.getElementById('navUser').style.display  = 'none';
+        }
+      }
+
+      function initDropdown() {
+        const menu     = document.getElementById('userMenu');
+        const btn      = document.getElementById('userBtn');
+        const dropdown = document.getElementById('userDropdown');
+        if (!menu || !btn) return;
+
+        /* Click to toggle */
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          const open = menu.classList.toggle('is-open');
+          btn.setAttribute('aria-expanded', String(open));
+        });
+
+        /* Click outside closes */
+        document.addEventListener('click', function () {
+          menu.classList.remove('is-open');
+          btn.setAttribute('aria-expanded', 'false');
+        });
+
+        /* Prevent dropdown clicks from closing it */
+        if (dropdown) {
+          dropdown.addEventListener('click', function (e) { e.stopPropagation(); });
+        }
+      }
+
+      function initLogout() {
+        const btn = document.getElementById('logoutBtn');
+        if (!btn) return;
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          sessionStorage.removeItem(SESSION_KEY);
+          window.location.reload();
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        applySession();
+        initDropdown();
+        initLogout();
+      });
+
+    })();
+  </script>
 
 </body>
 </html>

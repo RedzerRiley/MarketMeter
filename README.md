@@ -45,3 +45,22 @@ git commit -m "Your message"
 git push
 ```
 
+
+## Running the Node.JS server to make local database work
+
+``` bash 
+npm install
+node server.js
+
+```
+
+## Click localhost:3000
+Example:
+
+```bash
+PS C:\Users\Redzer\MarketMeter> node server.js
+
+  MarketMeter Server
+  Running at: http://localhost:3000    <-- Ctrl + Click
+  Database:   C:\Users\Redzer\MarketMeter\assets\database.txt
+  ```

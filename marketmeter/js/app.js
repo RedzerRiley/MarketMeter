@@ -1,28 +1,120 @@
 /* ============================================================
    MarketMeter — app.js
-   Shared JS for authenticated pages (dashboard, submit-price)
-   Handles: sidebar toggle, notification bell, profile population
+   Shared JS for authenticated pages (dashboard, submit-price).
+   Guards pages — redirects to login if no session exists.
+   Reads session saved by auth.js after login.
+
+   FOLDER: marketmeter/js/app.js
    ============================================================ */
 
 'use strict';
+
+const SESSION_KEY = 'mmSession';
+const DB_KEY      = 'mmUsers';
+
+/* ============================================================
+   SESSION GUARD
+   Call at top of every authenticated page.
+   Returns the user object or redirects to login.
+   ============================================================ */
+
+function requireAuth() {
+  const raw = sessionStorage.getItem(SESSION_KEY);
+  if (!raw) {
+    window.location.href = 'login.html';
+    return null;
+  }
+  return JSON.parse(raw);
+}
+
+function getSession() {
+  const raw = sessionStorage.getItem(SESSION_KEY);
+  return raw ? JSON.parse(raw) : null;
+}
+
+/* ============================================================
+   SIDEBAR PROFILE POPULATION
+   ============================================================ */
+
+function initProfile(user) {
+  function setEl(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  }
+
+  function getInitials(name) {
+    const parts = name.trim().split(' ');
+    return parts.length >= 2
+      ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+      : name.slice(0, 2).toUpperCase();
+  }
+
+  setEl('avatarInitials',  getInitials(user.fullName));
+  setEl('profileName',     user.fullName);
+  setEl('profileEmail',    user.email);
+  setEl('statSubmissions', user.submissions !== undefined ? user.submissions : 0);
+  setEl('statMemberSince', user.memberSince || '—');
+  setEl('welcomeName',     user.fullName.split(' ')[0]);
+}
+
+/* ============================================================
+   LOGOUT — clears session, redirects to login
+   ============================================================ */
+
+function initLogout() {
+  document.querySelectorAll('.sidebar-logout').forEach(link => {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      sessionStorage.removeItem(SESSION_KEY);
+      window.location.href = 'login.html';
+    });
+  });
+}
+
+/* ============================================================
+   SUBMISSION COUNTER
+   Increments count in localStorage and updates the session.
+   Called from submit-price.html after a successful submit.
+   ============================================================ */
+
+function incrementSubmissions() {
+  const user = getSession();
+  if (!user) return;
+
+  /* Update the user record in localStorage */
+  const users  = JSON.parse(localStorage.getItem(DB_KEY) || '[]');
+  const record = users.find(u => u.id === user.id);
+  if (record) {
+    record.submissions = (record.submissions || 0) + 1;
+    localStorage.setItem(DB_KEY, JSON.stringify(users));
+
+    /* Sync session */
+    user.submissions = record.submissions;
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(user));
+
+    /* Update sidebar counter live */
+    const el = document.getElementById('statSubmissions');
+    if (el) el.textContent = record.submissions;
+  }
+}
 
 /* ============================================================
    SIDEBAR TOGGLE (mobile)
    ============================================================ */
 
 function initSidebar() {
-  var toggle  = document.getElementById('sidebarToggle');
-  var sidebar = document.getElementById('sidebar');
-  var overlay = document.getElementById('sidebarOverlay');
+  const toggle  = document.getElementById('sidebarToggle');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
   if (!toggle || !sidebar) return;
 
-  toggle.addEventListener('click', function () {
+  toggle.addEventListener('click', () => {
     sidebar.classList.toggle('is-open');
     if (overlay) overlay.classList.toggle('is-open');
   });
 
   if (overlay) {
-    overlay.addEventListener('click', function () {
+    overlay.addEventListener('click', () => {
       sidebar.classList.remove('is-open');
       overlay.classList.remove('is-open');
     });
@@ -34,83 +126,28 @@ function initSidebar() {
    ============================================================ */
 
 function initNotifications() {
-  var btn      = document.getElementById('notifBtn');
-  var dropdown = document.getElementById('notifDropdown');
-  var clear    = document.getElementById('notifClear');
-  var badge    = document.getElementById('notifBadge');
+  const btn      = document.getElementById('notifBtn');
+  const dropdown = document.getElementById('notifDropdown');
+  const clear    = document.getElementById('notifClear');
+  const badge    = document.getElementById('notifBadge');
   if (!btn || !dropdown) return;
 
-  btn.addEventListener('click', function (e) {
+  btn.addEventListener('click', e => {
     e.stopPropagation();
     dropdown.classList.toggle('is-open');
   });
 
-  document.addEventListener('click', function () {
-    dropdown.classList.remove('is-open');
-  });
-
-  dropdown.addEventListener('click', function (e) {
-    e.stopPropagation();
-  });
+  document.addEventListener('click', () => dropdown.classList.remove('is-open'));
+  dropdown.addEventListener('click', e => e.stopPropagation());
 
   if (clear) {
-    clear.addEventListener('click', function () {
-      document.querySelectorAll('.notif-item--unread').forEach(function (item) {
-        item.classList.remove('notif-item--unread');
-        var dot = item.querySelector('.notif-dot');
-        if (dot) dot.style.backgroundColor = 'var(--border)';
-      });
+    clear.addEventListener('click', () => {
+      document.querySelectorAll('.notif-item--unread').forEach(el =>
+        el.classList.remove('notif-item--unread')
+      );
       if (badge) badge.style.display = 'none';
     });
   }
-}
-
-/* ============================================================
-   PROFILE POPULATION
-   Reads from localStorage key 'mmUser' (set by auth/login flow)
-
-   BACKEND DEVELOPER:
-   On successful login, save the user object to localStorage:
-     localStorage.setItem('mmUser', JSON.stringify({
-       fullName:    'Juan dela Cruz',
-       email:       'juan@example.com',
-       memberSince: 'Jan 2025',
-       submissions: 12
-     }));
-   Then this function will auto-populate all sidebar fields.
-   ============================================================ */
-
-function initProfile() {
-  var raw  = localStorage.getItem('mmUser');
-  var user = raw ? JSON.parse(raw) : null;
-
-  /* Fallback placeholder values when no session exists */
-  var fullName    = user && user.fullName    ? user.fullName    : 'Guest User';
-  var email       = user && user.email       ? user.email       : 'guest@marketmeter.ph';
-  var memberSince = user && user.memberSince ? user.memberSince : '—';
-  var submissions = user && user.submissions !== undefined ? user.submissions : 0;
-
-  /* Avatar initials */
-  function getInitials(name) {
-    var parts = name.trim().split(' ');
-    if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-    return name.slice(0, 2).toUpperCase();
-  }
-
-  function setEl(id, value) {
-    var el = document.getElementById(id);
-    if (el) el.textContent = value;
-  }
-
-  setEl('avatarInitials',  getInitials(fullName));
-  setEl('profileName',     fullName);
-  setEl('profileEmail',    email);
-  setEl('statSubmissions', submissions);
-  setEl('statMemberSince', memberSince);
-
-  /* Welcome name (first name only) */
-  var firstName = fullName.split(' ')[0];
-  setEl('welcomeName', firstName);
 }
 
 /* ============================================================
@@ -118,7 +155,11 @@ function initProfile() {
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', function () {
+  const user = requireAuth();
+  if (!user) return;   /* redirect already triggered */
+
+  initProfile(user);
   initSidebar();
   initNotifications();
-  initProfile();
+  initLogout();
 });
